@@ -2,110 +2,113 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout</title>
+  <title>Mein Test-Shop</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 2rem;
+      margin: 0;
+      background: #f4f4f4;
     }
 
-    .checkout-container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    h2 {
+    header {
+      background: #333;
+      color: #fff;
+      padding: 1rem;
       text-align: center;
     }
 
-    label {
-      display: block;
-      margin: 1rem 0 0.5rem;
-      font-weight: bold;
+    .shop-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
     }
 
-    input[type="text"],
-    input[type="email"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .agb {
-      margin: 1rem 0;
-    }
-
-    .agb input {
-      margin-right: 0.5rem;
-    }
-
-    button {
-      width: 100%;
+    .product-card {
+      background: white;
       padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .product-title {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .product-price {
+      color: #28a745;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn {
       background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
+    .btn:hover {
+      background: #0056b3;
     }
 
-    .success {
-      display: none;
-      margin-top: 1rem;
-      color: green;
+    .checkout-link {
       text-align: center;
+      margin: 2rem 0;
+    }
+
+    .checkout-link a {
+      background: #28a745;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+
+    .checkout-link a:hover {
+      background: #218838;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Mein Test-Shop</h1>
+  </header>
 
-  <div class="checkout-container">
-    <h2>Checkout</h2>
-    
-    <label for="name">Name</label>
-    <input type="text" id="name" placeholder="Max Mustermann" required>
-
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" placeholder="max@example.com" required>
-
-    <div class="agb">
-      <input type="checkbox" id="agb-checkbox">
-      <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
+  <div class="shop-container">
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Produkt 1">
+      <h2 class="product-title">Produkt 1</h2>
+      <p class="product-price">€19.99</p>
+      <button class="btn">In den Warenkorb</button>
     </div>
-
-    <button id="buy-btn" disabled>Jetzt kaufen</button>
-
-    <div class="success" id="success-message">
-      ✅ Bestellung erfolgreich!
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Produkt 2">
+      <h2 class="product-title">Produkt 2</h2>
+      <p class="product-price">€29.99</p>
+      <button class="btn">In den Warenkorb</button>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Produkt 3">
+      <h2 class="product-title">Produkt 3</h2>
+      <p class="product-price">€39.99</p>
+      <button class="btn">In den Warenkorb</button>
     </div>
   </div>
 
-  <script>
-    const agbCheckbox = document.getElementById('agb-checkbox');
-    const buyBtn = document.getElementById('buy-btn');
-    const successMsg = document.getElementById('success-message');
-
-    agbCheckbox.addEventListener('change', () => {
-      buyBtn.disabled = !agbCheckbox.checked;
-    });
-
-    buyBtn.addEventListener('click', () => {
-      successMsg.style.display = 'block';
-    });
-  </script>
-
+  <div class="checkout-link">
+    <a href="checkout.html">🛒 Zum Checkout</a>
+  </div>
 </body>
 </html>
