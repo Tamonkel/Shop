@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 2rem;
+    }
 
+    .checkout-container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .agb {
+      margin: 1rem 0;
+    }
+
+    .agb input {
+      margin-right: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success {
+      display: none;
+      margin-top: 1rem;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+    
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Max Mustermann" required>
+
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" placeholder="max@example.com" required>
+
+    <div class="agb">
+      <input type="checkbox" id="agb-checkbox">
+      <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
+    </div>
+
+    <button id="buy-btn" disabled>Jetzt kaufen</button>
+
+    <div class="success" id="success-message">
+      ✅ Bestellung erfolgreich!
+    </div>
+  </div>
+
+  <script>
+    const agbCheckbox = document.getElementById('agb-checkbox');
+    const buyBtn = document.getElementById('buy-btn');
+    const successMsg = document.getElementById('success-message');
+
+    agbCheckbox.addEventListener('change', () => {
+      buyBtn.disabled = !agbCheckbox.checked;
+    });
+
+    buyBtn.addEventListener('click', () => {
+      successMsg.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
