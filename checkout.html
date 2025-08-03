@@ -57,24 +57,11 @@
       cursor: pointer;
     }
 
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
     .success {
       display: none;
       margin-top: 1rem;
       color: green;
       text-align: center;
-    }
-
-    .error {
-      color: red;
-      font-size: 0.9rem;
-      display: none;
-      margin-top: -0.8rem;
-      margin-bottom: 0.8rem;
     }
   </style>
 </head>
@@ -82,36 +69,40 @@
 
   <div class="checkout-container">
     <h2>Checkout</h2>
-    
-    <!-- Schritt 1: Kundendaten -->
-    <label for="name">Name</label>
-    <input type="text" id="name" placeholder="Max Mustermann" required>
 
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" placeholder="max@example.com" required>
+    <!-- Formular beginnt -->
+    <form id="checkout-form">
+      <!-- Schritt 1: Kundendaten -->
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Max Mustermann" required>
 
-    <!-- Schritt 2: Lieferadresse -->
-    <label for="street">Straße & Hausnummer</label>
-    <input type="text" id="street" placeholder="Musterstraße 1" required>
+      <label for="email">E-Mail</label>
+      <input type="email" id="email" name="email" placeholder="max@example.com" required>
 
-    <label for="zip">Postleitzahl</label>
-    <input type="text" id="zip" placeholder="12345" required>
+      <!-- Schritt 2: Lieferadresse -->
+      <label for="street">Straße & Hausnummer</label>
+      <input type="text" id="street" name="street" placeholder="Musterstraße 1" required>
 
-    <label for="city">Ort</label>
-    <input type="text" id="city" placeholder="Musterstadt" required>
+      <label for="zip">Postleitzahl</label>
+      <input type="text" id="zip" name="zip" placeholder="12345" required>
 
-    <label for="country">Land</label>
-    <input type="text" id="country" placeholder="Deutschland" required>
+      <label for="city">Ort</label>
+      <input type="text" id="city" name="city" placeholder="Musterstadt" required>
 
-    <!-- AGB -->
-    <div class="agb">
-      <input type="checkbox" id="agb-checkbox">
-      <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
-    </div>
+      <label for="country">Land</label>
+      <input type="text" id="country" name="country" placeholder="Deutschland" required>
 
-    <!-- Button & Erfolg -->
-    <button id="buy-btn" disabled>Jetzt kaufen</button>
+      <!-- AGB Checkbox -->
+      <div class="agb">
+        <input type="checkbox" id="agb-checkbox" name="agb" required>
+        <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
+      </div>
 
+      <!-- Absenden -->
+      <button type="submit" id="buy-btn">Jetzt kaufen</button>
+    </form>
+
+    <!-- Erfolgsanzeige -->
     <div class="success" id="success-message">
       ✅ Bestellung erfolgreich!<br>
       Vielen Dank, <span id="customer-name"></span>.
@@ -119,38 +110,21 @@
   </div>
 
   <script>
-    const agbCheckbox = document.getElementById('agb-checkbox');
-    const buyBtn = document.getElementById('buy-btn');
+    const form = document.getElementById('checkout-form');
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
-    const inputs = [
-      document.getElementById('name'),
-      document.getElementById('email'),
-      document.getElementById('street'),
-      document.getElementById('zip'),
-      document.getElementById('city'),
-      document.getElementById('country'),
-    ];
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // Verhindert echtes Absenden
 
-    // Aktiviere Button nur wenn AGB akzeptiert
-    agbCheckbox.addEventListener('change', () => {
-      buyBtn.disabled = !agbCheckbox.checked;
-    });
-
-    buyBtn.addEventListener('click', () => {
-      const allFilled = inputs.every(input => input.value.trim() !== '');
-
-      if (!allFilled) {
-        alert('Bitte fülle alle Felder aus.');
-        return;
-      }
+      const name = document.getElementById('name').value;
 
       // Zeige Erfolgsmeldung
-      customerNameOutput.textContent = document.getElementById('name').value;
+      customerNameOutput.textContent = name;
       successMsg.style.display = 'block';
 
-      // Optional: Formulardaten an Server senden
+      // Optional: hier kannst du später zur Zahlung weiterleiten
+      // window.location.href = "zahlung.html";
     });
   </script>
 
