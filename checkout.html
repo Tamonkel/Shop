@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout – Sicher</title>
+  <title>Checkout</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -63,14 +63,6 @@
       color: green;
       text-align: center;
     }
-
-    .error {
-      color: red;
-      font-size: 0.9rem;
-      margin-top: -0.5rem;
-      margin-bottom: 0.8rem;
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -78,13 +70,16 @@
   <div class="checkout-container">
     <h2>Checkout</h2>
 
-    <form id="checkout-form" novalidate>
+    <!-- Formular beginnt -->
+    <form id="checkout-form">
+      <!-- Schritt 1: Kundendaten -->
       <label for="name">Name</label>
       <input type="text" id="name" name="name" placeholder="Max Mustermann" required>
 
       <label for="email">E-Mail</label>
       <input type="email" id="email" name="email" placeholder="max@example.com" required>
 
+      <!-- Schritt 2: Lieferadresse -->
       <label for="street">Straße & Hausnummer</label>
       <input type="text" id="street" name="street" placeholder="Musterstraße 1" required>
 
@@ -97,14 +92,17 @@
       <label for="country">Land</label>
       <input type="text" id="country" name="country" placeholder="Deutschland" required>
 
+      <!-- AGB Checkbox -->
       <div class="agb">
         <input type="checkbox" id="agb-checkbox" name="agb" required>
         <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
       </div>
 
-      <button type="submit">Jetzt kaufen</button>
+      <!-- Absenden -->
+      <button type="submit" id="buy-btn">Jetzt kaufen</button>
     </form>
 
+    <!-- Erfolgsanzeige -->
     <div class="success" id="success-message">
       ✅ Bestellung erfolgreich!<br>
       Vielen Dank, <span id="customer-name"></span>.
@@ -116,47 +114,17 @@
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
-    function sanitizeInput(input) {
-      return input.replace(/[<>]/g, '');
-    }
-
-    function validateForm(data) {
-      const namePattern = /^[a-zA-ZäöüÄÖÜß\s\-']{2,50}$/;
-      const zipPattern = /^[0-9]{4,6}$/;
-
-      return (
-        namePattern.test(data.name) &&
-        data.email.includes('@') &&
-        data.street.length > 3 &&
-        zipPattern.test(data.zip) &&
-        data.city.length > 1 &&
-        data.country.length > 1
-      );
-    }
-
     form.addEventListener('submit', (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Verhindert echtes Absenden
 
-      const data = {
-        name: sanitizeInput(document.getElementById('name').value.trim()),
-        email: sanitizeInput(document.getElementById('email').value.trim()),
-        street: sanitizeInput(document.getElementById('street').value.trim()),
-        zip: sanitizeInput(document.getElementById('zip').value.trim()),
-        city: sanitizeInput(document.getElementById('city').value.trim()),
-        country: sanitizeInput(document.getElementById('country').value.trim()),
-        agb: document.getElementById('agb-checkbox').checked
-      };
+      const name = document.getElementById('name').value;
 
-      if (!data.agb || !validateForm(data)) {
-        alert("Bitte alle Felder korrekt ausfüllen und AGB akzeptieren.");
-        return;
-      }
-
-      // Ausgabe ohne XSS
-      customerNameOutput.textContent = data.name;
+      // Zeige Erfolgsmeldung
+      customerNameOutput.textContent = name;
       successMsg.style.display = 'block';
 
-      // Optional: Daten speichern oder an Server senden
+      // Optional: hier kannst du später zur Zahlung weiterleiten
+      // window.location.href = "zahlung.html";
     });
   </script>
 
