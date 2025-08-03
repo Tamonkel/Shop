@@ -30,8 +30,7 @@
     }
 
     input[type="text"],
-    input[type="email"],
-    select {
+    input[type="email"] {
       width: 100%;
       padding: 0.5rem;
       margin-bottom: 1rem;
@@ -64,6 +63,14 @@
       color: green;
       text-align: center;
     }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -0.5rem;
+      margin-bottom: 0.8rem;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -72,17 +79,12 @@
     <h2>Checkout</h2>
 
     <form id="checkout-form" novalidate>
-      <!-- Schritt 1: Kundendaten -->
-      <label for="firstname">Vorname</label>
-      <input type="text" id="firstname" name="firstname" placeholder="Max" required>
-
-      <label for="lastname">Nachname</label>
-      <input type="text" id="lastname" name="lastname" placeholder="Mustermann" required>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Max Mustermann" required>
 
       <label for="email">E-Mail</label>
       <input type="email" id="email" name="email" placeholder="max@example.com" required>
 
-      <!-- Schritt 2: Lieferadresse -->
       <label for="street">Straße & Hausnummer</label>
       <input type="text" id="street" name="street" placeholder="Musterstraße 1" required>
 
@@ -93,23 +95,13 @@
       <input type="text" id="city" name="city" placeholder="Musterstadt" required>
 
       <label for="country">Land</label>
-      <select id="country" name="country" required>
-        <option value="">Bitte auswählen</option>
-        <option value="Deutschland">Deutschland</option>
-        <option value="Österreich">Österreich</option>
-        <option value="Schweiz">Schweiz</option>
-        <option value="Frankreich">Frankreich</option>
-        <option value="Italien">Italien</option>
-        <!-- Weitere Länder nach Bedarf -->
-      </select>
+      <input type="text" id="country" name="country" placeholder="Deutschland" required>
 
-      <!-- AGB -->
       <div class="agb">
         <input type="checkbox" id="agb-checkbox" name="agb" required>
         <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
       </div>
 
-      <!-- Absenden -->
       <button type="submit">Jetzt kaufen</button>
     </form>
 
@@ -133,13 +125,12 @@
       const zipPattern = /^[0-9]{4,6}$/;
 
       return (
-        namePattern.test(data.firstname) &&
-        namePattern.test(data.lastname) &&
+        namePattern.test(data.name) &&
         data.email.includes('@') &&
         data.street.length > 3 &&
         zipPattern.test(data.zip) &&
         data.city.length > 1 &&
-        data.country !== ''
+        data.country.length > 1
       );
     }
 
@@ -147,13 +138,12 @@
       e.preventDefault();
 
       const data = {
-        firstname: sanitizeInput(document.getElementById('firstname').value.trim()),
-        lastname: sanitizeInput(document.getElementById('lastname').value.trim()),
+        name: sanitizeInput(document.getElementById('name').value.trim()),
         email: sanitizeInput(document.getElementById('email').value.trim()),
         street: sanitizeInput(document.getElementById('street').value.trim()),
         zip: sanitizeInput(document.getElementById('zip').value.trim()),
         city: sanitizeInput(document.getElementById('city').value.trim()),
-        country: sanitizeInput(document.getElementById('country').value),
+        country: sanitizeInput(document.getElementById('country').value.trim()),
         agb: document.getElementById('agb-checkbox').checked
       };
 
@@ -162,8 +152,8 @@
         return;
       }
 
-      // XSS-sichere Ausgabe
-      customerNameOutput.textContent = data.firstname + ' ' + data.lastname;
+      // Ausgabe ohne XSS
+      customerNameOutput.textContent = data.name;
       successMsg.style.display = 'block';
 
       // Optional: Daten speichern oder an Server senden
