@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout – Sicher</title>
+  <title>Express Kasse</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
     }
 
     .checkout-container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background: white;
       padding: 2rem;
@@ -21,22 +21,35 @@
 
     h2 {
       text-align: center;
+      text-transform: uppercase;
+      color: #333;
     }
 
     label {
       display: block;
-      margin: 1rem 0 0.5rem;
+      margin: 0.5rem 0 0.3rem;
       font-weight: bold;
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .row .field {
+      flex: 1;
     }
 
     input[type="text"],
     input[type="email"],
+    input[type="tel"],
     select {
       width: 100%;
       padding: 0.5rem;
       margin-bottom: 1rem;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 1rem;
     }
 
     .agb {
@@ -69,47 +82,82 @@
 <body>
 
   <div class="checkout-container">
-    <h2>Checkout</h2>
+    <h2>Express Kasse</h2>
 
     <form id="checkout-form" novalidate>
-      <!-- Schritt 1: Kundendaten -->
-      <label for="firstname">Vorname</label>
-      <input type="text" id="firstname" name="firstname" placeholder="Max" required>
 
-      <label for="lastname">Nachname</label>
-      <input type="text" id="lastname" name="lastname" placeholder="Mustermann" required>
+      <!-- Vorname + Nachname -->
+      <div class="row">
+        <div class="field">
+          <label for="firstname">Vorname*</label>
+          <input type="text" id="firstname" required>
+        </div>
+        <div class="field">
+          <label for="lastname">Nachname*</label>
+          <input type="text" id="lastname" required>
+        </div>
+      </div>
 
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" name="email" placeholder="max@example.com" required>
+      <!-- E-Mail + Telefon -->
+      <div class="row">
+        <div class="field">
+          <label for="email">E-Mail-Adresse*</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Telefon</label>
+          <input type="tel" id="phone">
+        </div>
+      </div>
 
-      <!-- Schritt 2: Lieferadresse -->
-      <label for="street">Straße & Hausnummer</label>
-      <input type="text" id="street" name="street" placeholder="Musterstraße 1" required>
+      <!-- Adresse -->
+      <label for="street">Adresse*</label>
+      <input type="text" id="street" required>
 
-      <label for="zip">Postleitzahl</label>
-      <input type="text" id="zip" name="zip" placeholder="12345" required>
+      <!-- Ort + Postleitzahl -->
+      <div class="row">
+        <div class="field">
+          <label for="city">Ort*</label>
+          <input type="text" id="city" required>
+        </div>
+        <div class="field">
+          <label for="zip">Postleitzahl*</label>
+          <input type="text" id="zip" required>
+        </div>
+      </div>
 
-      <label for="city">Ort</label>
-      <input type="text" id="city" name="city" placeholder="Musterstadt" required>
-
-      <label for="country">Land</label>
-      <select id="country" name="country" required>
-        <option value="">Bitte auswählen</option>
-        <option value="Deutschland">Deutschland</option>
-        <option value="Österreich">Österreich</option>
-        <option value="Schweiz">Schweiz</option>
-        <option value="Frankreich">Frankreich</option>
-        <option value="Italien">Italien</option>
-        <!-- Weitere Länder nach Bedarf -->
-      </select>
+      <!-- Bundesland + Land -->
+      <div class="row">
+        <div class="field">
+          <label for="state">Bundesland*</label>
+          <select id="state" required>
+            <option value="">Bitte wählen</option>
+            <option value="Bayern">Bayern</option>
+            <option value="Berlin">Berlin</option>
+            <option value="NRW">Nordrhein-Westfalen</option>
+            <option value="Sachsen">Sachsen</option>
+            <!-- Weitere Bundesländer -->
+          </select>
+        </div>
+        <div class="field">
+          <label for="country">Land*</label>
+          <select id="country" required>
+            <option value="">Bitte wählen</option>
+            <option value="Deutschland">Deutschland</option>
+            <option value="Österreich">Österreich</option>
+            <option value="Schweiz">Schweiz</option>
+            <option value="Frankreich">Frankreich</option>
+          </select>
+        </div>
+      </div>
 
       <!-- AGB -->
       <div class="agb">
-        <input type="checkbox" id="agb-checkbox" name="agb" required>
-        <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
+        <input type="checkbox" id="agb" required>
+        <label for="agb">Ich akzeptiere die <a href="#">AGB</a></label>
       </div>
 
-      <!-- Absenden -->
+      <!-- Button -->
       <button type="submit">Jetzt kaufen</button>
     </form>
 
@@ -124,11 +172,11 @@
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
-    function sanitizeInput(input) {
-      return input.replace(/[<>]/g, '');
+    function sanitizeInput(str) {
+      return str.replace(/[<>]/g, '');
     }
 
-    function validateForm(data) {
+    function isValid(data) {
       const namePattern = /^[a-zA-ZäöüÄÖÜß\s\-']{2,50}$/;
       const zipPattern = /^[0-9]{4,6}$/;
 
@@ -139,7 +187,9 @@
         data.street.length > 3 &&
         zipPattern.test(data.zip) &&
         data.city.length > 1 &&
-        data.country !== ''
+        data.state !== '' &&
+        data.country !== '' &&
+        data.agb === true
       );
     }
 
@@ -150,23 +200,22 @@
         firstname: sanitizeInput(document.getElementById('firstname').value.trim()),
         lastname: sanitizeInput(document.getElementById('lastname').value.trim()),
         email: sanitizeInput(document.getElementById('email').value.trim()),
+        phone: sanitizeInput(document.getElementById('phone').value.trim()),
         street: sanitizeInput(document.getElementById('street').value.trim()),
-        zip: sanitizeInput(document.getElementById('zip').value.trim()),
         city: sanitizeInput(document.getElementById('city').value.trim()),
-        country: sanitizeInput(document.getElementById('country').value),
-        agb: document.getElementById('agb-checkbox').checked
+        zip: sanitizeInput(document.getElementById('zip').value.trim()),
+        state: document.getElementById('state').value,
+        country: document.getElementById('country').value,
+        agb: document.getElementById('agb').checked
       };
 
-      if (!data.agb || !validateForm(data)) {
-        alert("Bitte alle Felder korrekt ausfüllen und AGB akzeptieren.");
+      if (!isValid(data)) {
+        alert("Bitte alle Pflichtfelder korrekt ausfüllen und AGB akzeptieren.");
         return;
       }
 
-      // XSS-sichere Ausgabe
       customerNameOutput.textContent = data.firstname + ' ' + data.lastname;
       successMsg.style.display = 'block';
-
-      // Optional: Daten speichern oder an Server senden
     });
   </script>
 
