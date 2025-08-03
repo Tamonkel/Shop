@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout</title>
+  <title>Checkout – Sicher</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,7 +30,8 @@
     }
 
     input[type="text"],
-    input[type="email"] {
+    input[type="email"],
+    select {
       width: 100%;
       padding: 0.5rem;
       margin-bottom: 1rem;
@@ -70,11 +71,13 @@
   <div class="checkout-container">
     <h2>Checkout</h2>
 
-    <!-- Formular beginnt -->
-    <form id="checkout-form">
+    <form id="checkout-form" novalidate>
       <!-- Schritt 1: Kundendaten -->
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="Max Mustermann" required>
+      <label for="firstname">Vorname</label>
+      <input type="text" id="firstname" name="firstname" placeholder="Max" required>
+
+      <label for="lastname">Nachname</label>
+      <input type="text" id="lastname" name="lastname" placeholder="Mustermann" required>
 
       <label for="email">E-Mail</label>
       <input type="email" id="email" name="email" placeholder="max@example.com" required>
@@ -90,19 +93,26 @@
       <input type="text" id="city" name="city" placeholder="Musterstadt" required>
 
       <label for="country">Land</label>
-      <input type="text" id="country" name="country" placeholder="Deutschland" required>
+      <select id="country" name="country" required>
+        <option value="">Bitte auswählen</option>
+        <option value="Deutschland">Deutschland</option>
+        <option value="Österreich">Österreich</option>
+        <option value="Schweiz">Schweiz</option>
+        <option value="Frankreich">Frankreich</option>
+        <option value="Italien">Italien</option>
+        <!-- Weitere Länder nach Bedarf -->
+      </select>
 
-      <!-- AGB Checkbox -->
+      <!-- AGB -->
       <div class="agb">
         <input type="checkbox" id="agb-checkbox" name="agb" required>
         <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
       </div>
 
       <!-- Absenden -->
-      <button type="submit" id="buy-btn">Jetzt kaufen</button>
+      <button type="submit">Jetzt kaufen</button>
     </form>
 
-    <!-- Erfolgsanzeige -->
     <div class="success" id="success-message">
       ✅ Bestellung erfolgreich!<br>
       Vielen Dank, <span id="customer-name"></span>.
@@ -114,17 +124,49 @@
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
+    function sanitizeInput(input) {
+      return input.replace(/[<>]/g, '');
+    }
+
+    function validateForm(data) {
+      const namePattern = /^[a-zA-ZäöüÄÖÜß\s\-']{2,50}$/;
+      const zipPattern = /^[0-9]{4,6}$/;
+
+      return (
+        namePattern.test(data.firstname) &&
+        namePattern.test(data.lastname) &&
+        data.email.includes('@') &&
+        data.street.length > 3 &&
+        zipPattern.test(data.zip) &&
+        data.city.length > 1 &&
+        data.country !== ''
+      );
+    }
+
     form.addEventListener('submit', (e) => {
-      e.preventDefault(); // Verhindert echtes Absenden
+      e.preventDefault();
 
-      const name = document.getElementById('name').value;
+      const data = {
+        firstname: sanitizeInput(document.getElementById('firstname').value.trim()),
+        lastname: sanitizeInput(document.getElementById('lastname').value.trim()),
+        email: sanitizeInput(document.getElementById('email').value.trim()),
+        street: sanitizeInput(document.getElementById('street').value.trim()),
+        zip: sanitizeInput(document.getElementById('zip').value.trim()),
+        city: sanitizeInput(document.getElementById('city').value.trim()),
+        country: sanitizeInput(document.getElementById('country').value),
+        agb: document.getElementById('agb-checkbox').checked
+      };
 
-      // Zeige Erfolgsmeldung
-      customerNameOutput.textContent = name;
+      if (!data.agb || !validateForm(data)) {
+        alert("Bitte alle Felder korrekt ausfüllen und AGB akzeptieren.");
+        return;
+      }
+
+      // XSS-sichere Ausgabe
+      customerNameOutput.textContent = data.firstname + ' ' + data.lastname;
       successMsg.style.display = 'block';
 
-      // Optional: hier kannst du später zur Zahlung weiterleiten
-      // window.location.href = "zahlung.html";
+      // Optional: Daten speichern oder an Server senden
     });
   </script>
 
