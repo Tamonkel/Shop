@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Express Kasse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -77,6 +78,13 @@
       color: green;
       text-align: center;
     }
+
+    /* 🔁 Responsive Layout */
+    @media (max-width: 600px) {
+      .row {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
@@ -86,7 +94,6 @@
 
     <form id="checkout-form" novalidate>
 
-      <!-- Vorname + Nachname -->
       <div class="row">
         <div class="field">
           <label for="firstname">Vorname*</label>
@@ -98,7 +105,6 @@
         </div>
       </div>
 
-      <!-- E-Mail + Telefon -->
       <div class="row">
         <div class="field">
           <label for="email">E-Mail-Adresse*</label>
@@ -110,11 +116,9 @@
         </div>
       </div>
 
-      <!-- Adresse -->
       <label for="street">Adresse*</label>
       <input type="text" id="street" required>
 
-      <!-- Ort + Postleitzahl -->
       <div class="row">
         <div class="field">
           <label for="city">Ort*</label>
@@ -126,7 +130,6 @@
         </div>
       </div>
 
-      <!-- Bundesland + Land -->
       <div class="row">
         <div class="field">
           <label for="state">Bundesland*</label>
@@ -136,7 +139,6 @@
             <option value="Berlin">Berlin</option>
             <option value="NRW">Nordrhein-Westfalen</option>
             <option value="Sachsen">Sachsen</option>
-            <!-- Weitere Bundesländer -->
           </select>
         </div>
         <div class="field">
@@ -151,13 +153,11 @@
         </div>
       </div>
 
-      <!-- AGB -->
       <div class="agb">
         <input type="checkbox" id="agb" required>
         <label for="agb">Ich akzeptiere die <a href="#">AGB</a></label>
       </div>
 
-      <!-- Button -->
       <button type="submit">Jetzt kaufen</button>
     </form>
 
