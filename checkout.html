@@ -68,6 +68,14 @@
       color: green;
       text-align: center;
     }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      display: none;
+      margin-top: -0.8rem;
+      margin-bottom: 0.8rem;
+    }
   </style>
 </head>
 <body>
@@ -75,21 +83,38 @@
   <div class="checkout-container">
     <h2>Checkout</h2>
     
+    <!-- Schritt 1: Kundendaten -->
     <label for="name">Name</label>
     <input type="text" id="name" placeholder="Max Mustermann" required>
 
     <label for="email">E-Mail</label>
     <input type="email" id="email" placeholder="max@example.com" required>
 
+    <!-- Schritt 2: Lieferadresse -->
+    <label for="street">Straße & Hausnummer</label>
+    <input type="text" id="street" placeholder="Musterstraße 1" required>
+
+    <label for="zip">Postleitzahl</label>
+    <input type="text" id="zip" placeholder="12345" required>
+
+    <label for="city">Ort</label>
+    <input type="text" id="city" placeholder="Musterstadt" required>
+
+    <label for="country">Land</label>
+    <input type="text" id="country" placeholder="Deutschland" required>
+
+    <!-- AGB -->
     <div class="agb">
       <input type="checkbox" id="agb-checkbox">
       <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
     </div>
 
+    <!-- Button & Erfolg -->
     <button id="buy-btn" disabled>Jetzt kaufen</button>
 
     <div class="success" id="success-message">
-      ✅ Bestellung erfolgreich!
+      ✅ Bestellung erfolgreich!<br>
+      Vielen Dank, <span id="customer-name"></span>.
     </div>
   </div>
 
@@ -97,13 +122,35 @@
     const agbCheckbox = document.getElementById('agb-checkbox');
     const buyBtn = document.getElementById('buy-btn');
     const successMsg = document.getElementById('success-message');
+    const customerNameOutput = document.getElementById('customer-name');
 
+    const inputs = [
+      document.getElementById('name'),
+      document.getElementById('email'),
+      document.getElementById('street'),
+      document.getElementById('zip'),
+      document.getElementById('city'),
+      document.getElementById('country'),
+    ];
+
+    // Aktiviere Button nur wenn AGB akzeptiert
     agbCheckbox.addEventListener('change', () => {
       buyBtn.disabled = !agbCheckbox.checked;
     });
 
     buyBtn.addEventListener('click', () => {
+      const allFilled = inputs.every(input => input.value.trim() !== '');
+
+      if (!allFilled) {
+        alert('Bitte fülle alle Felder aus.');
+        return;
+      }
+
+      // Zeige Erfolgsmeldung
+      customerNameOutput.textContent = document.getElementById('name').value;
       successMsg.style.display = 'block';
+
+      // Optional: Formulardaten an Server senden
     });
   </script>
 
