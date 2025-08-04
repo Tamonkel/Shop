@@ -91,6 +91,10 @@
         gap: 0;
       }
     }
+
+    #state-container {
+      transition: all 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -142,7 +146,7 @@
 
       <!-- Bundesland / Land -->
       <div class="row">
-        <div class="field">
+        <div class="field" id="state-container">
           <label for="state">Bundesland*</label>
           <select id="state" name="state" required>
             <option value="">Bitte wählen</option>
@@ -185,9 +189,29 @@
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
+    const countrySelect = document.getElementById('country');
+    const stateContainer = document.getElementById('state-container');
+    const stateSelect = document.getElementById('state');
+
+    function toggleStateField() {
+      const selectedCountry = countrySelect.value;
+      if (selectedCountry === 'Deutschland') {
+        stateContainer.style.display = 'block';
+        stateSelect.setAttribute('required', 'required');
+      } else {
+        stateContainer.style.display = 'none';
+        stateSelect.removeAttribute('required');
+        stateSelect.value = '';
+      }
+    }
+
+    // Sicherheitsfunktion gegen XSS
     function sanitizeInput(str) {
       return str.replace(/[<>]/g, '');
     }
+
+    countrySelect.addEventListener('change', toggleStateField);
+    window.addEventListener('DOMContentLoaded', toggleStateField);
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -198,6 +222,7 @@
       customerNameOutput.textContent = `${firstname} ${lastname}`;
       successMsg.style.display = 'block';
       form.reset();
+      toggleStateField(); // Bundesland-Feld zurücksetzen
     });
   </script>
 
