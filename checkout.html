@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,7 +12,7 @@
     }
 
     .checkout-container {
-      max-width: 500px;
+      max-width: 650px;
       margin: auto;
       background: white;
       padding: 2rem;
@@ -19,27 +20,42 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    h2 {
+    h1 {
       text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #333;
     }
 
     label {
       display: block;
-      margin: 1rem 0 0.5rem;
+      margin-bottom: 0.4rem;
       font-weight: bold;
     }
 
-    input[type="text"],
-    input[type="email"] {
-      width: 100%;
-      padding: 0.5rem;
+    .row {
+      display: flex;
+      gap: 1rem;
       margin-bottom: 1rem;
+    }
+
+    .field {
+      flex: 1;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 0.6rem;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 1rem;
     }
 
     .agb {
-      margin: 1rem 0;
+      margin: 1.5rem 0;
     }
 
     .agb input {
@@ -59,50 +75,99 @@
 
     .success {
       display: none;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       color: green;
       text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="checkout-container">
-    <h2>Checkout</h2>
+    <h1>Checkout</h1>
 
-    <!-- Formular beginnt -->
     <form id="checkout-form">
-      <!-- Schritt 1: Kundendaten -->
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="Max Mustermann" required>
 
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" name="email" placeholder="max@example.com" required>
-
-      <!-- Schritt 2: Lieferadresse -->
-      <label for="street">Straße & Hausnummer</label>
-      <input type="text" id="street" name="street" placeholder="Musterstraße 1" required>
-
-      <label for="zip">Postleitzahl</label>
-      <input type="text" id="zip" name="zip" placeholder="12345" required>
-
-      <label for="city">Ort</label>
-      <input type="text" id="city" name="city" placeholder="Musterstadt" required>
-
-      <label for="country">Land</label>
-      <input type="text" id="country" name="country" placeholder="Deutschland" required>
-
-      <!-- AGB Checkbox -->
-      <div class="agb">
-        <input type="checkbox" id="agb-checkbox" name="agb" required>
-        <label for="agb-checkbox" style="display: inline;">Ich akzeptiere die <a href="#">AGB</a></label>
+      <!-- Vorname / Nachname -->
+      <div class="row">
+        <div class="field">
+          <label for="firstname">Vorname*</label>
+          <input type="text" id="firstname" name="firstname" required>
+        </div>
+        <div class="field">
+          <label for="lastname">Nachname*</label>
+          <input type="text" id="lastname" name="lastname" required>
+        </div>
       </div>
 
-      <!-- Absenden -->
-      <button type="submit" id="buy-btn">Jetzt kaufen</button>
+      <!-- E-Mail / Telefon -->
+      <div class="row">
+        <div class="field">
+          <label for="email">E-Mail-Adresse*</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Telefon</label>
+          <input type="tel" id="phone" name="phone">
+        </div>
+      </div>
+
+      <!-- Adresse -->
+      <label for="street">Adresse*</label>
+      <input type="text" id="street" name="street" required style="margin-bottom: 1rem;">
+
+      <!-- Ort / Postleitzahl -->
+      <div class="row">
+        <div class="field">
+          <label for="city">Ort*</label>
+          <input type="text" id="city" name="city" required>
+        </div>
+        <div class="field">
+          <label for="zip">Postleitzahl*</label>
+          <input type="text" id="zip" name="zip" required>
+        </div>
+      </div>
+
+      <!-- Bundesland / Land -->
+      <div class="row">
+        <div class="field">
+          <label for="state">Bundesland*</label>
+          <select id="state" name="state" required>
+            <option value="">Bitte wählen</option>
+            <option value="Bayern">Bayern</option>
+            <option value="Berlin">Berlin</option>
+            <option value="NRW">Nordrhein-Westfalen</option>
+            <option value="Sachsen">Sachsen</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="country">Land*</label>
+          <select id="country" name="country" required>
+            <option value="">Bitte wählen</option>
+            <option value="Deutschland">Deutschland</option>
+            <option value="Österreich">Österreich</option>
+            <option value="Schweiz">Schweiz</option>
+            <option value="Frankreich">Frankreich</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- AGB -->
+      <div class="agb">
+        <input type="checkbox" id="agb" name="agb" required>
+        <label for="agb">Ich akzeptiere die <a href="#">AGB</a></label>
+      </div>
+
+      <!-- Button -->
+      <button type="submit">Jetzt kaufen</button>
     </form>
 
-    <!-- Erfolgsanzeige -->
     <div class="success" id="success-message">
       ✅ Bestellung erfolgreich!<br>
       Vielen Dank, <span id="customer-name"></span>.
@@ -114,17 +179,20 @@
     const successMsg = document.getElementById('success-message');
     const customerNameOutput = document.getElementById('customer-name');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault(); // Verhindert echtes Absenden
+    function sanitizeInput(str) {
+      return str.replace(/[<>]/g, '');
+    }
 
-      const name = document.getElementById('name').value;
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-      // Zeige Erfolgsmeldung
-      customerNameOutput.textContent = name;
+      // HTML5 Validierung wird automatisch durchgeführt
+      const firstname = sanitizeInput(document.getElementById('firstname').value.trim());
+      const lastname = sanitizeInput(document.getElementById('lastname').value.trim());
+
+      customerNameOutput.textContent = `${firstname} ${lastname}`;
       successMsg.style.display = 'block';
-
-      // Optional: hier kannst du später zur Zahlung weiterleiten
-      // window.location.href = "zahlung.html";
+      form.reset();
     });
   </script>
 
